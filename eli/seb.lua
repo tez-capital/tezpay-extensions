@@ -4,7 +4,8 @@ Distributes SEB tokens in fixed rate to delegators
 
 extensions: [
 	{
-		path: "extensions/seb.lua",
+		command: eli
+		args: ["extensions/seb.lua"]
 		configuration: {
 			exchange_rate: 0.1,			  // exchange rate in SEB per 1 XTZ
 			ignore_delegators: [ ... ],	  // ignore delegators with these addresses
