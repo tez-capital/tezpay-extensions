@@ -179,13 +179,14 @@ local handlers = {
 			if candidate.is_invalid then
 				goto CONTINUE
 			end
-			local bonds_amount = tonumber(candidate.bonds_amount)
+			local bonds_amount = bigint.new(candidate.bonds_amount)
 			if bonds_amount <= 0 then
 				goto CONTINUE
 			end
 
 			local faCandidate = util.clone(candidate, true)
-			faCandidate.bonds_amount = tostring(math.ceil(bonds_amount * def.configuration.exchange_rate))
+			local percent = def.configuration.exchange_rate * 100
+			faCandidate.bonds_amount = tostring((bonds_amount * percent) / 100)
 			faCandidate.tx_kind = "fa2"
 			faCandidate.fa_contract = def.configuration.contract_address
 			faCandidate.fa_token_id = tostring(def.configuration.token_id)
