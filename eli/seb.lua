@@ -28,6 +28,7 @@ local def                            = {
 }
 
 local hjson                          = require("hjson")
+local bigint                         = require("bigint")
 
 -- calls
 local CALL_PREFIX                    = "tp."
