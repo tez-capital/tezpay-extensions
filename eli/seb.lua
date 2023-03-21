@@ -116,7 +116,7 @@ local function stringify(value)
 end
 
 local function write_error(id, error)
-	local response = stringify({ jsonrpc = "2.0", id = id, error = METHOD_NOT_FOUND })
+	local response = stringify({ jsonrpc = "2.0", id = id, error = error })
 	log("ERROR: " .. response)
 	io.write(response .. "\n")
 	io.output():flush()
@@ -163,13 +163,14 @@ local handlers = {
 	[AFTER_BONDS_DISTRIBUTED_HOOK] = function(request)
 		local id = request.id
 		local version = request.params.version
-		if version ~= "0.1" then
+		if version ~= "0.2" then
 			write_error(id, new_server_error("Unsupported version: " .. version))
 			return
 		end
 
-		local candidates = request.params.data
-		local result = util.clone(candidates, true)
+		local data = request.params.data
+		local candidates = data.candidates
+		local result = util.clone(data, true)
 		for _, candidate in ipairs(candidates) do
 			if def.configuration.ignore_smart_contracts and candidate.recipient:find("KT1") == 1 then
 				goto CONTINUE
@@ -192,7 +193,7 @@ local handlers = {
 			faCandidate.fa_contract = def.configuration.contract_address
 			faCandidate.fa_token_id = tostring(def.configuration.token_id)
 
-			table.insert(result, faCandidate)
+			table.insert(result.candidates, faCandidate)
 			::CONTINUE::
 		end
 
